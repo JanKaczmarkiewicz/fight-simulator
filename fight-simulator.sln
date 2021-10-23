@@ -1,0 +1,18 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "fight-simulator", "fight-simulator\fight-simulator.csproj", "{194DA13C-AD51-4045-B02E-57801390D0EE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{194DA13C-AD51-4045-B02E-57801390D0EE}.Debug|x86.ActiveCfg = Debug|x86
+		{194DA13C-AD51-4045-B02E-57801390D0EE}.Debug|x86.Build.0 = Debug|x86
+		{194DA13C-AD51-4045-B02E-57801390D0EE}.Debug|x86.Deploy.0 = Debug|x86
+		{194DA13C-AD51-4045-B02E-57801390D0EE}.Release|x86.ActiveCfg = Release|x86
+		{194DA13C-AD51-4045-B02E-57801390D0EE}.Release|x86.Build.0 = Release|x86
+		{194DA13C-AD51-4045-B02E-57801390D0EE}.Release|x86.Deploy.0 = Release|x86
+	EndGlobalSection
+EndGlobal
