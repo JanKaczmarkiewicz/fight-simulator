@@ -1,15 +1,12 @@
 ﻿using AppKit;
 using Foundation;
 
+
 namespace fight_simulator
 {
-    [Register("AppDelegate")]
+    [Register(nameof(AppDelegate))]
     public class AppDelegate : NSApplicationDelegate
     {
-        public AppDelegate()
-        {/*caret*/
-        }
-
         public override void DidFinishLaunching(NSNotification notification)
         {
             // Insert code here to initialize your application
@@ -19,5 +16,7 @@ namespace fight_simulator
         {
             // Insert code here to tear down your application
         }
+
+        public override bool ApplicationShouldTerminateAfterLastWindowClosed(NSApplication sender) => true;
     }
 }

@@ -45,30 +45,50 @@
         <PlatformTarget>x86</PlatformTarget>
     </PropertyGroup>
     <ItemGroup>
-        <Reference Include="System"/>
-        <Reference Include="System.Core"/>
-        <Reference Include="Xamarin.Mac"/>
+        <Reference Include="SkiaSharp, Version=2.88.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756">
+          <HintPath>..\packages\SkiaSharp.2.88.0-preview.150\lib\xamarinmac2.0\SkiaSharp.dll</HintPath>
+          <Private>True</Private>
+        </Reference>
+        <Reference Include="SkiaSharp.Views.Mac, Version=2.88.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756">
+          <HintPath>..\packages\SkiaSharp.Views.2.88.0-preview.150\lib\xamarinmac2.0\SkiaSharp.Views.Mac.dll</HintPath>
+          <Private>True</Private>
+        </Reference>
+        <Reference Include="System" />
+        <Reference Include="System.Core" />
+        <Reference Include="Xamarin.Mac" />
     </ItemGroup>
     <ItemGroup>
-        <ImageAsset Include="Assets.xcassets\Contents.json"/>
+        <ImageAsset Include="Assets.xcassets\Contents.json" />
     </ItemGroup>
     <ItemGroup>
-        <Folder Include="Resources\"/>
+        <Folder Include="Resources\" />
     </ItemGroup>
     <ItemGroup>
-        <None Include="Info.plist"/>
-        <None Include="Entitlements.plist"/>
+        <None Include="Info.plist" />
+        <None Include="Entitlements.plist" />
+        <None Include="packages.config" />
     </ItemGroup>
     <ItemGroup>
-        <Compile Include="Main.cs"/>
-        <Compile Include="AppDelegate.cs"/>
-        <Compile Include="ViewController.cs"/>
+        <Compile Include="BoardManager.cs" />
+        <Compile Include="BoardRenderer.cs" />
+        <Compile Include="Circle.cs" />
+        <Compile Include="Fraction.cs" />
+        <Compile Include="Main.cs" />
+        <Compile Include="AppDelegate.cs" />
+        <Compile Include="ViewController.cs" />
         <Compile Include="ViewController.designer.cs">
             <DependentUpon>ViewController.cs</DependentUpon>
         </Compile>
     </ItemGroup>
     <ItemGroup>
-        <InterfaceDefinition Include="Main.storyboard"/>
+        <InterfaceDefinition Include="Main.storyboard" />
     </ItemGroup>
-    <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets"/>
+    <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
+    <Import Project="..\packages\SkiaSharp.NativeAssets.macOS.2.88.0-preview.150\build\xamarinmac2.0\SkiaSharp.NativeAssets.macOS.targets" Condition="Exists('..\packages\SkiaSharp.NativeAssets.macOS.2.88.0-preview.150\build\xamarinmac2.0\SkiaSharp.NativeAssets.macOS.targets')" />
+    <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+      <PropertyGroup>
+        <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105.The missing file is {0}.</ErrorText>
+      </PropertyGroup>
+      <Error Condition="!Exists('..\packages\SkiaSharp.NativeAssets.macOS.2.88.0-preview.150\build\xamarinmac2.0\SkiaSharp.NativeAssets.macOS.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SkiaSharp.NativeAssets.macOS.2.88.0-preview.150\build\xamarinmac2.0\SkiaSharp.NativeAssets.macOS.targets'))" />
+    </Target>
 </Project>

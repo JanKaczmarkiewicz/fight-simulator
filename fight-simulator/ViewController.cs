@@ -1,34 +1,34 @@
 ﻿using System;
-
+using System.Linq;
 using AppKit;
-using Foundation;
+using SkiaSharp;
+using SkiaSharp.Views.Mac;
 
 namespace fight_simulator
 {
     public partial class ViewController : NSViewController
     {
-        public ViewController(IntPtr handle) : base(handle)
+        private BoardManager boardManager = new BoardManager(0.75);
+        private BoardRenderer boardRenderer = new BoardRenderer();
+
+        public ViewController(IntPtr handle)
+            : base(handle)
         {
         }
+
 
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
 
-            // Do any additional setup after loading the view.
+            skiaView.IgnorePixelScaling = true;
+            skiaView.PaintSurface += OnPaintSurface;
         }
 
-        public override NSObject RepresentedObject
+
+        private void OnPaintSurface(object sender, SKPaintSurfaceEventArgs e)
         {
-            get
-            {
-                return base.RepresentedObject;
-            }
-            set
-            {
-                base.RepresentedObject = value;
-                // Update the view, if already loaded.
-            }
+            boardRenderer.Draw(e, boardManager);
         }
     }
 }
