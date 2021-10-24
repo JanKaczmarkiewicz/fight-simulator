@@ -1,44 +1,83 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using Foundation;
 
 namespace fight_simulator
 {
     public class BoardManager
     {
-        const int InitialFractionMembersCount = 10;
+        const int InitialFractionMembersCount = 5;
 
-        private int fractionsCount = Enum.GetNames(typeof(Fraction)).Length;
+        private int _fractionsCount = Enum.GetNames(typeof(Fraction)).Length;
 
-        private Random rnd = new Random();
-        private double ratio;
-        private Circle[] circles;
+        private Random _rnd = new Random();
+        private double _ratio;
+        private Circle[] _circles;
 
-        public Circle[] GetCircles() => circles;
+        public Circle[] GetCircles() => _circles;
 
-        public double GetHeight() => ratio;
+        public double GetHeight() => _ratio;
 
         public double GetWidth() => 1;
 
         public BoardManager(double ratio)
         {
-            var radius = 0.01;
-            this.ratio = ratio;
-            this.circles = Enumerable
-                .Range(1, fractionsCount * InitialFractionMembersCount)
+            this._ratio = ratio;
+            this._circles = Enumerable
+                .Range(1, _fractionsCount * InitialFractionMembersCount)
                 .Select((val) =>
                 {
                     Fraction fraction;
-                    Fraction.TryParse((val % fractionsCount).ToString(), out fraction);
+                    Fraction.TryParse((val % _fractionsCount).ToString(), out fraction);
                     return fraction;
-                })
-                .Select((fraction) => new Circle()
-                    {
-                        x = rnd.NextDouble() * (GetWidth() - 2 * radius) + radius,
-                        y = rnd.NextDouble() * (GetHeight() - 2 * radius) + radius,
-                        fraction = fraction,
-                        radius = 0.01
-                    }
+                }).Select(
+                    (fraction) => CreateCircle(fraction)
                 ).ToArray();
+        }
+
+        private Circle CreateCircle(Fraction fraction)
+        {
+            const double radius = 0.01;
+            return new Circle()
+            {
+                X = _rnd.NextDouble() * (GetWidth() - 2 * radius) + radius,
+                Y = _rnd.NextDouble() * (GetHeight() - 2 * radius) + radius,
+                Fraction = fraction,
+                DirectionAngle = _rnd.NextDouble() * 2 * Math.PI,
+                Radius = radius,
+                Velocity = 0.001
+            };
+        }
+
+        public void UpdateCircles()
+        {
+            for (var i = 0; i < _circles.Length; i++)
+            {
+                var nextX = _circles[i].X + (Math.Cos(_circles[i].DirectionAngle) * _circles[i].Velocity);
+                var nextY = _circles[i].Y + (Math.Sin(_circles[i].DirectionAngle) * _circles[i].Velocity);
+                
+                
+                _circles[i].X = nextX;
+                _circles[i].Y = nextY;
+            }
+        }
+
+        public void StartLoop(Action action)
+        {
+            NSTimer.CreateRepeatingScheduledTimer(
+                new TimeSpan(
+                    0,
+                    0,
+                    0,
+                    0,
+                    33
+                ),
+                (t) =>
+                {
+                    UpdateCircles();
+                    action();
+                });
         }
     }
 }

@@ -6,31 +6,31 @@ namespace fight_simulator
 {
     public class BoardRenderer
     {
-        SKPaint bluePaint = new SKPaint
+        SKPaint _bluePaint = new SKPaint
         {
             Color = SKColors.Blue,
             IsAntialias = true,
         };
 
-        SKPaint lightGreyPaint = new SKPaint
+        SKPaint _lightGreyPaint = new SKPaint
         {
             Color = SKColors.LightGray,
             IsAntialias = true,
         };
 
-        SKPaint redPaint = new SKPaint
+        SKPaint _redPaint = new SKPaint
         {
             Color = SKColors.Red,
             IsAntialias = true,
         };
 
-        SKPaint greenPaint = new SKPaint
+        SKPaint _greenPaint = new SKPaint
         {
             Color = SKColors.Green,
             IsAntialias = true,
         };
 
-        SKPaint blackPaint = new SKPaint
+        SKPaint _blackPaint = new SKPaint
         {
             Color = SKColors.Black,
             IsAntialias = true,
@@ -40,19 +40,22 @@ namespace fight_simulator
         {
             var circles = boardManager.GetCircles();
 
-            var canvasHeight = e.Info.Height;
-            var canvasWidth = e.Info.Width;
+            var windowHeight = e.Info.Height;
+            var windowWidth = e.Info.Width;
 
             var boardHeight = boardManager.GetHeight();
             var boardWidth = boardManager.GetWidth();
 
-            var scale = Math.Max((float) boardHeight / canvasHeight, (float) boardWidth / canvasWidth);
+            var scale = Math.Max(
+                boardHeight / windowHeight,
+                boardWidth / windowWidth
+            );
 
             var boardActualHeight = boardHeight / scale;
             var boardActualWidth = boardWidth / scale;
 
-            var shiftY = (canvasHeight - boardActualHeight) / 2;
-            var shiftX = (canvasWidth - boardActualWidth) / 2;
+            var shiftY = (windowHeight - boardActualHeight) / 2;
+            var shiftX = (windowWidth - boardActualWidth) / 2;
 
             var canvas = e.Surface.Canvas;
 
@@ -62,17 +65,16 @@ namespace fight_simulator
                 (float) shiftY,
                 (float) boardActualWidth,
                 (float) boardActualHeight,
-                lightGreyPaint);
+                _lightGreyPaint
+            );
 
             foreach (var circle in circles)
-            {
                 canvas.DrawCircle(
-                    (float) ((circle.x / scale) + shiftX),
-                    (float) ((circle.y / scale) + shiftY),
-                    (float) ((circle.radius) / scale),
-                    GetPaint(circle.fraction)
+                    (float) ((circle.X / scale) + shiftX),
+                    (float) ((circle.Y / scale) + shiftY),
+                    (float) ((circle.Radius) / scale),
+                    GetPaint(circle.Fraction)
                 );
-            }
         }
 
         private SKPaint GetPaint(Fraction fraction)
@@ -80,15 +82,15 @@ namespace fight_simulator
             switch (fraction)
             {
                 case Fraction.Black:
-                    return blackPaint;
+                    return _blackPaint;
                 case Fraction.Green:
-                    return greenPaint;
+                    return _greenPaint;
                 case Fraction.Red:
-                    return redPaint;
+                    return _redPaint;
                 case Fraction.Blue:
-                    return bluePaint;
+                    return _bluePaint;
                 default:
-                    return greenPaint;
+                    return _greenPaint;
             }
         }
     }

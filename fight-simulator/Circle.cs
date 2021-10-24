@@ -2,9 +2,11 @@ namespace fight_simulator
 {
     public struct Circle
     {
-        public double x;
-        public double y;
-        public Fraction fraction;
-        public double radius;
+        public double X;
+        public double Y;
+        public Fraction Fraction;
+        public double Radius;
+        public double DirectionAngle;
+        public double Velocity;
     }
 }
