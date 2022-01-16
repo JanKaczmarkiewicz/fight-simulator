@@ -9,31 +9,26 @@ namespace fight_simulator
         SKPaint _bluePaint = new SKPaint
         {
             Color = SKColors.Blue,
-            IsAntialias = true,
         };
 
         SKPaint _lightGreyPaint = new SKPaint
         {
             Color = SKColors.LightGray,
-            IsAntialias = true,
         };
 
         SKPaint _redPaint = new SKPaint
         {
             Color = SKColors.Red,
-            IsAntialias = true,
         };
 
         SKPaint _greenPaint = new SKPaint
         {
             Color = SKColors.Green,
-            IsAntialias = true,
         };
 
         SKPaint _blackPaint = new SKPaint
         {
             Color = SKColors.Black,
-            IsAntialias = true,
         };
 
         public void Draw(SKPaintSurfaceEventArgs e, BoardManager boardManager)
