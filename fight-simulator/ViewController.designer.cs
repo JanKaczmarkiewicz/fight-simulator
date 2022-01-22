@@ -14,6 +14,18 @@ namespace fight_simulator
 	partial class ViewController
 	{
 		[Outlet]
+		AppKit.NSTextField BlackLabel { get; set; }
+
+		[Outlet]
+		AppKit.NSTextField BlueLabel { get; set; }
+
+		[Outlet]
+		AppKit.NSTextField GreenLabel { get; set; }
+
+		[Outlet]
+		AppKit.NSTextField RedLabel { get; set; }
+
+		[Outlet]
 		SkiaSharp.Views.Mac.SKCanvasView skiaView { get; set; }
 
 		[Action ("AddBoard:")]
@@ -27,6 +39,26 @@ namespace fight_simulator
 			if (skiaView != null) {
 				skiaView.Dispose ();
 				skiaView = null;
+			}
+
+			if (RedLabel != null) {
+				RedLabel.Dispose ();
+				RedLabel = null;
+			}
+
+			if (GreenLabel != null) {
+				GreenLabel.Dispose ();
+				GreenLabel = null;
+			}
+
+			if (BlueLabel != null) {
+				BlueLabel.Dispose ();
+				BlueLabel = null;
+			}
+
+			if (BlackLabel != null) {
+				BlackLabel.Dispose ();
+				BlackLabel = null;
 			}
 
 		}

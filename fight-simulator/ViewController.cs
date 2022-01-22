@@ -30,6 +30,14 @@ namespace fight_simulator
             _boardManagers.Add(manager);
         }
 
+        void UpdateLabels()
+        {
+            RedLabel.StringValue = $"Red: {0}";
+            BlueLabel.StringValue = $"Blue: {0}";
+            BlackLabel.StringValue = $"Black: {0}";
+            GreenLabel.StringValue = $"Green: {0}";
+        }
+        
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
@@ -49,6 +57,7 @@ namespace fight_simulator
                 ),
                 (t) =>
                 {
+                    UpdateLabels();
                     skiaView.NeedsDisplay = true;
                 });
         }
