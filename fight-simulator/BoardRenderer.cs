@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using SkiaSharp;
 using SkiaSharp.Views.Mac;
 
@@ -31,45 +32,62 @@ namespace fight_simulator
             Color = SKColors.Black,
         };
 
-        public void Draw(SKPaintSurfaceEventArgs e, BoardManager boardManager)
+        public void Draw(SKPaintSurfaceEventArgs e, List<BoardManager> boardManagers)
         {
-            var circles = boardManager.GetCircles();
-
             var windowHeight = e.Info.Height;
             var windowWidth = e.Info.Width;
 
-            var boardHeight = boardManager.GetHeight();
-            var boardWidth = boardManager.GetWidth();
+            var boardsInColumn = 4;
+            
+            var boardHeight = boardManagers[0].GetHeight();
+            var boardWidth = boardManagers[0].GetWidth();
 
-            var scale = Math.Max(
-                boardHeight / windowHeight,
-                boardWidth / windowWidth
-            );
-
-            var boardActualHeight = boardHeight / scale;
-            var boardActualWidth = boardWidth / scale;
-
-            var shiftY = (windowHeight - boardActualHeight) / 2;
-            var shiftX = (windowWidth - boardActualWidth) / 2;
-
+            var totalBoardsWidth = Math.Min(boardsInColumn, boardManagers.Count) * boardWidth;
+            var totalBoardsHeight =  boardHeight * Math.Ceiling((double) boardManagers.Count / boardsInColumn);
+            
             var canvas = e.Surface.Canvas;
+            
+            var scale = Math.Max(
+                totalBoardsHeight / windowHeight,
+                totalBoardsWidth / windowWidth
+            );
 
             canvas.Clear(SKColors.White);
-            canvas.DrawRect(
-                (float) shiftX,
-                (float) shiftY,
-                (float) boardActualWidth,
-                (float) boardActualHeight,
-                _lightGreyPaint
-            );
 
-            foreach (var circle in circles)
-                canvas.DrawCircle(
-                    (float) ((circle.X / scale) + shiftX),
-                    (float) ((circle.Y / scale) + shiftY),
-                    (float) ((circle.Radius) / scale),
-                    GetPaint(circle.Fraction)
+            for (var i = 0; i < boardManagers.Count; i++)
+            {
+                var boardActualHeight = boardHeight / scale;
+                var boardActualWidth = boardWidth / scale;
+
+                var shiftY = boardActualHeight * Math.Floor((double) i / boardsInColumn);
+                var shiftX = boardActualWidth * (i % boardsInColumn);
+                
+                canvas.DrawRect(
+                    (float) shiftX,
+                    (float) shiftY,
+                    (float) boardActualWidth,
+                    (float) boardActualHeight,
+                    _lightGreyPaint
                 );
+                
+                var leftUp = new SKPoint((float)shiftX, (float)shiftY);
+                var rightUp = new SKPoint((float)shiftX + (float) boardActualWidth, (float)shiftY);
+                var leftDown = new SKPoint((float)shiftX, (float)shiftY + (float)boardActualHeight);
+                var rightDown = new SKPoint((float)shiftX + (float) boardActualWidth, (float)shiftY + (float)boardActualHeight);
+                    
+                canvas.DrawLine(leftUp, rightUp, _blackPaint);
+                canvas.DrawLine(rightUp, rightDown, _blackPaint);
+                canvas.DrawLine(rightDown, leftDown, _blackPaint);
+                canvas.DrawLine(leftDown, leftUp, _blackPaint);
+
+                boardManagers[i].GetCircles().ForEach((circle) => 
+                    canvas.DrawCircle(
+                        (float) ((circle.X / scale) + shiftX),
+                        (float) ((circle.Y / scale) + shiftY),
+                        (float) ((circle.Radius) / scale),
+                        GetPaint(circle.Fraction)
+                    ));
+            }
         }
 
         private SKPaint GetPaint(Fraction fraction)

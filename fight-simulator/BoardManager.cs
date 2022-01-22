@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Foundation;
 
 namespace fight_simulator
@@ -22,15 +23,34 @@ namespace fight_simulator
 
         public double GetWidth() => 1;
 
-        public BoardManager(double ratio)
+        public BoardManager()
         {
-            _ratio = ratio;
+            _ratio = 0.75;
 
             for (var i = 0; i < _fractionsCount * InitialFractionMembersCount; i++)
             {
                 Enum.TryParse((i % _fractionsCount).ToString(), out Fraction fraction);
                 _circles.Add(CreateCircle(fraction));
             }
+        }
+
+        
+        public void StartLoop()
+        {
+            NSTimer.CreateRepeatingScheduledTimer(
+                new TimeSpan(
+                    0,
+                    0,
+                    0,
+                    0,
+                    33
+                ),
+                (t) =>
+                {
+                    var tread = new Thread(UpdateCircles);
+                    tread.Start();
+                }
+            );
         }
 
         private int GetFractionPoints(Fraction fraction) => points[fraction];
@@ -50,7 +70,7 @@ namespace fight_simulator
                 Radius = radius,
                 Velocity = velocity
             };
-            
+
             do
             {
                 circle.X = _rnd.NextDouble() * (GetWidth() - 2 * radius) + radius;
@@ -66,7 +86,7 @@ namespace fight_simulator
             return Math.Pow(circle1.X - circle2.X, 2) + Math.Pow(circle1.Y - circle2.Y, 2) <= Math.Pow(minDistance, 2);
         }
 
-        public void UpdateCircles()
+        private void UpdateCircles()
         {
             var circlesToRemove = new HashSet<int>();
             for (var i = 0; i < _circles.Count; i++)

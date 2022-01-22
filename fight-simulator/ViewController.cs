@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using AppKit;
 using Foundation;
 using SkiaSharp.Views.Mac;
@@ -7,12 +8,26 @@ namespace fight_simulator
 {
     public partial class ViewController : NSViewController
     {
-        private readonly BoardManager _boardManager = new BoardManager(0.75);
+        private List<BoardManager> _boardManagers = new List<BoardManager>();
         private readonly BoardRenderer _boardRenderer = new BoardRenderer();
 
         public ViewController(IntPtr handle)
             : base(handle)
         {
+            _boardManagers.Add(new BoardManager());
+        }
+        
+        
+        partial void PopBoard (NSObject sender)
+        {
+            _boardManagers.RemoveAt(_boardManagers.Count - 1);
+        }
+        
+        partial void AddBoard (NSObject sender)
+        {
+            var manager = new BoardManager();
+            manager.StartLoop();
+            _boardManagers.Add(manager);
         }
 
         public override void ViewDidLoad()
@@ -22,17 +37,18 @@ namespace fight_simulator
             skiaView.IgnorePixelScaling = true;
             skiaView.PaintSurface += OnPaintSurface;
 
+            _boardManagers.ForEach(boardManager => boardManager.StartLoop());
+     
             NSTimer.CreateRepeatingScheduledTimer(
                 new TimeSpan(
                     0,
                     0,
                     0,
                     0,
-                    10
+                    33
                 ),
                 (t) =>
                 {
-                    _boardManager.UpdateCircles();
                     skiaView.NeedsDisplay = true;
                 });
         }
@@ -40,7 +56,7 @@ namespace fight_simulator
 
         private void OnPaintSurface(object sender, SKPaintSurfaceEventArgs e)
         {
-            _boardRenderer.Draw(e, _boardManager);
+            _boardRenderer.Draw(e, _boardManagers);
         }
     }
 }
