@@ -9,13 +9,13 @@ namespace fight_simulator
     public class BoardManager
     {
         private const int InitialFractionMembersCount = 5;
+        private static Mutex _mut = new Mutex();
         private readonly int _fractionsCount = Enum.GetNames(typeof(Fraction)).Length;
         private readonly Random _rnd = new Random();
         private readonly double _ratio;
         private List<Circle> _circles = new List<Circle>();
 
-        private Dictionary<Fraction, int> points =
-            Enum.GetValues(typeof(Fraction)).Cast<Fraction>().ToDictionary(value => value, value => 5);
+        private readonly Dictionary<Fraction, int> _points;
 
         public List<Circle> GetCircles() => _circles;
 
@@ -23,8 +23,9 @@ namespace fight_simulator
 
         public double GetWidth() => 1;
 
-        public BoardManager()
+        public BoardManager(Dictionary<Fraction, int> points)
         {
+            _points = points;
             _ratio = 0.75;
 
             for (var i = 0; i < _fractionsCount * InitialFractionMembersCount; i++)
@@ -53,14 +54,24 @@ namespace fight_simulator
             );
         }
 
-        private int GetFractionPoints(Fraction fraction) => points[fraction];
-        private void IncrementFractionPoints(Fraction fraction) => points[fraction] += 1;
-        private void DecrementFractionPoints(Fraction fraction) => points[fraction] -= 1;
+        private int GetFractionPoints(Fraction fraction) => _points[fraction];
+        private void IncrementFractionPoints(Fraction fraction) {
+            _mut.WaitOne();
+            _points[fraction] += 1;
+            _mut.ReleaseMutex();
+        }
+
+        private void DecrementFractionPoints(Fraction fraction)
+        {
+            _mut.WaitOne();
+            _points[fraction] -= 1;
+            _mut.ReleaseMutex();
+        }
 
         private Circle CreateCircle(Fraction fraction)
         {
-            const double radius = 0.05;
-            const double velocity = 0.001;
+            const double radius = 0.02;
+            const double velocity = 0.002;
             var circle = new Circle()
             {
                 X = 0,
