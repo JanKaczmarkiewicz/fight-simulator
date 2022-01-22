@@ -66,7 +66,7 @@ namespace fight_simulator
             return Math.Pow(circle1.X - circle2.X, 2) + Math.Pow(circle1.Y - circle2.Y, 2) <= Math.Pow(minDistance, 2);
         }
 
-        private void UpdateCircles()
+        public void UpdateCircles()
         {
             var circlesToRemove = new HashSet<int>();
             for (var i = 0; i < _circles.Count; i++)
@@ -98,7 +98,7 @@ namespace fight_simulator
                         circlesToRemove.Add(j);
                         continue;
                     }
-                    
+
                     if (GetFractionPoints(circle.Fraction) < GetFractionPoints(otherCircle.Fraction))
                     {
                         IncrementFractionPoints(otherCircle.Fraction);
@@ -121,7 +121,7 @@ namespace fight_simulator
 
                         (circle.DirectionAngle, otherCircle.DirectionAngle) =
                             (otherCircle.DirectionAngle, circle.DirectionAngle);
-                        
+
                         _circles[j] = otherCircle;
                     }
                 }
@@ -137,23 +137,6 @@ namespace fight_simulator
 
             // remove circles
             _circles = _circles.Where((circle, i) => !circlesToRemove.Contains(i)).ToList();
-        }
-
-        public void StartLoop(Action action)
-        {
-            NSTimer.CreateRepeatingScheduledTimer(
-                new TimeSpan(
-                    0,
-                    0,
-                    0,
-                    0,
-                    10
-                ),
-                (t) =>
-                {
-                    UpdateCircles();
-                    action();
-                });
         }
     }
 }

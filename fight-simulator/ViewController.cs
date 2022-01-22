@@ -22,9 +22,19 @@ namespace fight_simulator
             skiaView.IgnorePixelScaling = true;
             skiaView.PaintSurface += OnPaintSurface;
 
-            _boardManager.StartLoop(
-                () => { skiaView.NeedsDisplay = true; }
-            );
+            NSTimer.CreateRepeatingScheduledTimer(
+                new TimeSpan(
+                    0,
+                    0,
+                    0,
+                    0,
+                    10
+                ),
+                (t) =>
+                {
+                    _boardManager.UpdateCircles();
+                    skiaView.NeedsDisplay = true;
+                });
         }
 
 
