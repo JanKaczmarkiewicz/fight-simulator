@@ -71,7 +71,7 @@ namespace fight_simulator
         private Circle CreateCircle(Fraction fraction)
         {
             const double radius = 0.02;
-            const double velocity = 0.002;
+            const double velocity = 0.001;
             var circle = new Circle()
             {
                 X = 0,

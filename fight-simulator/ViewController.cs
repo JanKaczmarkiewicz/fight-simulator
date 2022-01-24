@@ -21,7 +21,6 @@ namespace fight_simulator
             _boardManagers.Add(new BoardManager(points));
         }
 
-
         partial void PopBoard(NSObject sender)
         {
             _boardManagers.RemoveAt(_boardManagers.Count - 1);
